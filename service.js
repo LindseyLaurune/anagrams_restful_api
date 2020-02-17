@@ -14,7 +14,7 @@ exports.sampleRequest = function (req, res, map) {
     }
    
     var response = {
-         "anagrams" : results
+         "anagrams" : map[results]
 
     };
 
@@ -35,12 +35,42 @@ exports.testRequest = function (req, res, map) {
         postBody = JSON.parse(body);
 
         var response = {
-            "text": "Post Request Value is  " + postBody.value
+            "text": "Post Request Value is  " + postBody.words
         };
+        var str1 = [];
+        var str1 = JSON.stringify(postBody.words).replace('[','').replace(']','').replace(/['"]+/g, '').split(',');
+        var end1 = [];
+        str1.forEach(function(item){
+            end1= item.split('').sort().join('').toLowerCase();
+                if (undefined === Object.prototype.setdefault) {
+                Object.prototype.setdefault = function(key, def) {
+                    if (! this.hasOwnProperty(key)) {
+                        this[key] = def;
+                    }
+                    return this[key];
+                };
+            }
+
+            map.setdefault(end1, []).push(item);
+            console.log(item);
+        });
+
+        
+        //results= postBody.words.split('').sort().join('').toLowerCase();
+          /*  if (undefined === Object.prototype.setdefault) {
+            Object.prototype.setdefault = function(key, def) {
+                if (! this.hasOwnProperty(key)) {
+                    this[key] = def;
+                }
+                return this[key];
+            };
+        }
+        
+        map.setdefault(results, []).push(textByLine[i]);*/
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(response));
+        res.end(JSON.stringify(postBody.words));
     });
 };
 
